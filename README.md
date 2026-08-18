@@ -7,7 +7,7 @@
 
 ## 1. 프로젝트 배경
 
-사내 AI Challenge로 진행된 대회이며, **데이터 수집부터 모델링까지 참가자가 직접 수행**하는 형태였습니다.
+SSAFY에서 진행된 AI Challenge 대회이며, **데이터 수집부터 모델링까지 참가자가 직접 수행**하는 형태였습니다.
 
 | 단계 | 내용 |
 |------|------|
@@ -79,31 +79,9 @@ pred = CHOICES[choice_logits.argmax().item()]
 
 ---
 
-## 3. 저장소 구성
+## 3. 실행 방법
 
-```
-AI-Challenge/
-├── optimized_solution.ipynb            # Qwen2.5-VL-3B 기반 최적화 솔루션 (베이스라인 개선판)
-├── internvl2_8b_local.ipynb            # InternVL2-8B, 로컬 GPU 학습 (전체 train, 1 epoch)
-├── internvl2_8b_colab.ipynb            # InternVL2-8B, Colab + Drive, 학습/검증 분리 (best val_acc 저장)
-└── internvl2_8b_colab_full_train.ipynb # InternVL2-8B, Colab + Drive, 전체 데이터 학습 (검증 없음)
-```
-
-| 노트북 | 모델 | 데이터 | Epochs | 검증 | 실행 환경 |
-|--------|------|--------|--------|------|-----------|
-| `optimized_solution.ipynb` | `Qwen/Qwen2.5-VL-3B-Instruct` | train 샘플링(200) + 9:1 split | 3 | val **loss** | 로컬 |
-| `internvl2_8b_local.ipynb` | `OpenGVLab/InternVL2-8B` | 전체 `train.csv` | 1 | 없음 | 로컬 |
-| `internvl2_8b_colab.ipynb` | `OpenGVLab/InternVL2-8B` | `subset_train` / `subset_val` | 3 | val **accuracy** (best 저장) | Colab |
-| `internvl2_8b_colab_full_train.ipynb` | `OpenGVLab/InternVL2-8B` | 전체 `train.csv` | 3 | 없음 (에폭마다 저장) | Colab |
-
-> `optimized_solution.ipynb` → InternVL2 계열로 넘어간 순서로 작업했습니다.
-> 최종 제출은 InternVL2-8B 전체 학습 버전을 사용했습니다.
-
----
-
-## 4. 실행 방법
-
-### 4.1 환경
+### 3.1 환경
 
 - Python 3.10+, CUDA GPU (VRAM 16GB 이상 권장 — 8B + 4bit 기준)
 - bfloat16 미지원 GPU(T4 등)는 자동으로 float16 폴백
@@ -114,7 +92,7 @@ pip install "transformers>=4.43.2,<5.0.0" "accelerate>=0.34.2" \
             einops timm sentencepiece tiktoken pandas pillow
 ```
 
-### 4.2 로컬 실행 (`internvl2_8b_local.ipynb`)
+### 3.2 로컬 실행 (`internvl2_8b_local.ipynb`)
 
 작업 폴더를 아래 구조로 준비한 뒤 노트북을 위에서부터 실행합니다.
 
@@ -128,7 +106,7 @@ pip install "transformers>=4.43.2,<5.0.0" "accelerate>=0.34.2" \
 
 경로가 다르면 노트북 상단의 `BASE_DIR`만 수정하면 됩니다.
 
-### 4.3 Colab 실행 (`internvl2_8b_colab*.ipynb`)
+### 3.3 Colab 실행 (`internvl2_8b_colab*.ipynb`)
 
 Google Drive의 `MyDrive` 아래에 데이터를 두고 실행합니다.
 
@@ -140,7 +118,7 @@ MyDrive/
 └── test.zip   ← 있으면 /content 로 자동 압축 해제
 ```
 
-### 4.4 출력
+### 3.4 출력
 
 학습이 끝나면 LoRA 어댑터가 `internvl2_vqa_lora/` (또는 `qwen_vqa_lora/`)에 저장되고,
 테스트 추론 결과가 `submission.csv`로 생성됩니다.
@@ -154,7 +132,7 @@ id,answer
 
 ---
 
-## 5. 주요 하이퍼파라미터
+## 4. 주요 하이퍼파라미터
 
 | 항목 | 값 |
 |------|-----|
@@ -172,7 +150,7 @@ id,answer
 
 ---
 
-## 6. 베이스라인 대비 개선 내역
+## 5. 베이스라인 대비 개선 내역
 
 | 항목 | 베이스라인 | 본 솔루션 |
 |------|-----------|-----------|
@@ -187,7 +165,7 @@ id,answer
 
 ---
 
-## 7. 회고
+## 6. 회고
 
 **결과적으로 수상하지는 못했습니다.** 돌아보며 정리한 한계와 배운 점입니다.
 
@@ -209,7 +187,7 @@ id,answer
 
 ---
 
-## 8. 참고
+## 7. 참고
 
 - [InternVL2](https://github.com/OpenGVLab/InternVL) — OpenGVLab
 - [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL) — Alibaba
